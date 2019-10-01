@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.email           = 'david.robakowski@synlay.com'
   s.homepage        = "https://github.com/bruno-sales/logstash-filter-cache-redis"
   s.require_paths = ["lib"]
+  s.platform = Gem::Platform::JAVA if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
 
   # Files
   s.files = Dir['lib/**/*','spec/**/*','vendor/**/*','*.gemspec','*.md','CONTRIBUTORS','Gemfile','LICENSE']
