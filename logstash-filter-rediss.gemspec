@@ -1,12 +1,12 @@
 Gem::Specification.new do |s|
-  s.name = 'logstash-filter-cache-redis'
-  s.version         = '0.3.3'
+  s.name = 'logstash-filter-rediss'
+  s.version         = '0.3.4'
   s.licenses        = ['MIT']
   s.summary         = "Redis Cache Filter for Logstash"
   s.description     = "A Logstash filter plugin for storing and retrieving data from redis cache. This gem is a Logstash plugin required to be installed on top of the Logstash core pipeline using $LS_HOME/bin/logstash-plugin install gem_name. This gem is not a stand-alone program."
   s.authors         = ["David Robakowski"]
   s.email           = 'david.robakowski@synlay.com'
-  s.homepage        = "https://github.com/synlay/logstash-filter-cache-redis"
+  s.homepage        = "https://github.com/bruno-sales/logstash-filter-cache-redis"
   s.require_paths = ["lib"]
 
   # Files

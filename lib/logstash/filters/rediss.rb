@@ -4,8 +4,8 @@ require "logstash/namespace"
 require "redis"
 require "redlock"
 
-class LogStash::Filters::CacheRedis < LogStash::Filters::Base
-    config_name "cache_redis"
+class LogStash::Filters::Rediss < LogStash::Filters::Base
+    config_name "rediss"
 
     # The field to perform filter
     #
@@ -149,7 +149,7 @@ class LogStash::Filters::CacheRedis < LogStash::Filters::Base
             end
 
             if @setex
-                @redis.setex(event.get(@set), event.get(@ttl), event.get(@source))
+                @redis.setex(event.get(@setex), event.get(@ttl), event.get(@source))
             end
 
             if @exists
@@ -259,7 +259,7 @@ class LogStash::Filters::CacheRedis < LogStash::Filters::Base
             :db => @db,
             :ssl => @ssl
         }
-        
+
         @logger.debug("connection params", params)
 
         if @password
