@@ -17,6 +17,12 @@ class LogStash::Filters::CacheRedis < LogStash::Filters::Base
 
     config :field, :validate => :string
 
+    # Expire time in seconds
+    config :ttl => :number
+
+    # Informs if the connection is to be made with SSL or not
+    config :ssl => :boolean
+
     # For now only working for rpushnx and llen!
     config :cmd_key_is_formatted, :validate => :boolean, :default => false
 
@@ -62,6 +68,8 @@ class LogStash::Filters::CacheRedis < LogStash::Filters::Base
     config :get, :validate => :string
 
     config :set, :validate => :string
+
+    config :setex, :validate => :string
 
     config :exists, :validate => :string
 
@@ -138,6 +146,10 @@ class LogStash::Filters::CacheRedis < LogStash::Filters::Base
 
             if @set
                 @redis.set(event.get(@set), event.get(@source))
+            end
+
+            if @setex
+                @redis.setex(event.get(@set), event.get(@ttl), event.get(@source))
             end
 
             if @exists
@@ -244,8 +256,10 @@ class LogStash::Filters::CacheRedis < LogStash::Filters::Base
             :host => @current_host,
             :port => @current_port,
             :timeout => @timeout,
-            :db => @db
+            :db => @db,
+            :ssl => @ssl
         }
+        
         @logger.debug("connection params", params)
 
         if @password
@@ -256,9 +270,12 @@ class LogStash::Filters::CacheRedis < LogStash::Filters::Base
     end # def connect
 
     def connect_lockmanager
+        @protocol =  @ssl ? 'rediss://' : 'redis://'
+
         hosts = Array(@host).map { |host|
-            host.prepend('redis://') unless host.start_with?('redis://')
+            host.prepend(@protocol) unless host.start_with?(@protocol) 
         }
+
         @logger.debug("lock_manager hosts", hosts)
 
         Redlock::Client.new(hosts)
